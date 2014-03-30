@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <title>
+      <!--#macro($head)-->
+        BookStore
+      <!--#end-->
+    </title>
+  </head>
+  <body>
+    <!--#macro($!body)-->
+    <table>
+      <tr>
+        <td>
+          <!--#macro($!crumbs(String home))-->
+            <a href="/">Home</a>
+          <!--#end-->
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <!--#macro(m := menus)-->
+            <a href="/users">Users</a><br/>
+            <a href="/books">Books</a><br/>
+          <!--#end-->
+          $!{m}
+        </td>
+        <td>
+          <!--#macro($!main)-->
+            Building...
+          <!--#end-->
+        </td>
+      </tr>
+    </table>
+    <!--#end-->
+  </body>
+</html>
