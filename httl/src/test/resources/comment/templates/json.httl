@@ -1,0 +1,4 @@
+<!--#var(User user)-->
+$!{user.encodeJson}
+${user.encodeJson.decodeJson.toMap.name}
+${user.encodeJson.decodeJson("httl.test.model.User").to("httl.test.model.User").name}

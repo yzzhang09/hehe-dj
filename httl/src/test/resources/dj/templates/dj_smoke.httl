@@ -1,0 +1,4 @@
+<table>
+{{ books.length }}
+{{ books|length }}
+</table>
