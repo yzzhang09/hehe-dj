@@ -94,7 +94,7 @@ public class DjScanner {
                 sb.append((char) c);
             }
         }
-        sbToToken(tokens, sb, Type.LINE);
+        sbToToken(tokens, sb, Type.BLOCK);
     }
 
     private void sbToToken(List<Token> tokens, StringBuffer sb, Type type) {

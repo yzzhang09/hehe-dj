@@ -139,7 +139,7 @@ public class DjTemplateParser implements Parser {
             Token token = tokens.get(t);
             String message = token.getMessage();
             int offset = token.getOffset();
-            if (isDirective(message)) {
+            if (token.getType() == DjScanner.Type.BLOCK.getValue()) {
                 doDirective(directives, seq, token, message, offset);
             } else if (token.getType() == DjScanner.Type.LINE.getValue()) {
                 directives.add(new ValueDirective((Expression) expressionParser.parse(message, 0), true, offset));
@@ -175,26 +175,15 @@ public class DjTemplateParser implements Parser {
     private void doDirective(List<Statement> directives, AtomicInteger seq, Token token, String message, int offset)
                                                                                                                     throws ParseException,
                                                                                                                     IOException {
-        int s = message.indexOf('(');
-        String name;
-        String value;
-        int exprOffset;
-        if (s > 0) {
-            exprOffset = offset + s + 1;
-            name = message.substring(1, s);
-            if (!message.endsWith(")")) {
-                throw new ParseException("The #" + name + " directive mismatch right parentheses.", exprOffset);
-            }
-            value = message.substring(s + 1, message.length() - 1);
-        } else {
-            exprOffset = token.getOffset() + message.length();
-            name = message.substring(1);
-            value = "";
-            if (!StringUtils.inArray(name, elseDirective) && !StringUtils.inArray(name, endDirective)
-                && !StringUtils.inArray(name, breakDirective)) {
-                throw new ParseException("Not found parameter expression in the #" + name + " directive.", offset);
-            }
+        message = message.trim();
+        String[] messages = message.split("\\s", 2);
+        String name = messages[0];
+        String value = "";
+        if (messages.length > 1) {
+            value = messages[1];
         }
+        int exprOffset = token.getOffset() + message.length();
+
         if (StringUtils.inArray(name, setDirective)) {
             if (value.contains("=")) {
                 int o = 0;

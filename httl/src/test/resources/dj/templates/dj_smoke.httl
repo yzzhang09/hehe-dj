@@ -1,4 +1,15 @@
 <table>
-{{ books.length }}
+
+
+{% if(books||book1) %}
+NOBOOK
+{% else %}
+
 {{ books|length }}
+{% for book in books %}
+book:{{ book.title }}
+{% endfor %}
+
+{% endif %}
 </table>
+ 
