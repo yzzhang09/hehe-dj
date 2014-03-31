@@ -176,12 +176,19 @@ public class DjTemplateParser implements Parser {
                                                                                                                     throws ParseException,
                                                                                                                     IOException {
         message = message.trim();
+
         String[] messages = message.split("\\s", 2);
         String name = messages[0];
         String value = "";
-        if (messages.length > 1) {
+
+        int indexBracket = message.indexOf("(");
+        if (indexBracket != -1 && name.length() > indexBracket) {
+            name = message.substring(0, indexBracket);
+            value = message.substring(indexBracket);
+        } else if (messages.length > 1) {
             value = messages[1];
         }
+
         int exprOffset = token.getOffset() + message.length();
 
         if (StringUtils.inArray(name, setDirective)) {

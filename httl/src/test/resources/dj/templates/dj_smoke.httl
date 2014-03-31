@@ -1,7 +1,7 @@
 <table>
 
 
-{% if(books||book1) %}
+{% if(not books) %}
 NOBOOK
 {% else %}
 
