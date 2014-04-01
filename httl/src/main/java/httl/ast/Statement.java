@@ -17,6 +17,8 @@ package httl.ast;
 
 import httl.Node;
 import httl.Visitor;
+import httl.spi.translators.templates.CompiledVisitor;
+import httl.spi.translators.templates.InterpretedVisitor;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -53,5 +55,19 @@ public abstract class Statement implements Node {
 			throw new ParseException("Can not modify parent.", getOffset());
 		this.parent = parent;
 	}
+
+    /** 
+     * @see httl.Node#interpretedVisit(httl.spi.translators.templates.InterpretedVisitor)
+     */
+    @Override
+    public void interpretedVisit(InterpretedVisitor visitor) {
+    }
+
+    /** 
+     * @see httl.Node#compiledVisit(httl.spi.translators.templates.CompiledVisitor)
+     */
+    @Override
+    public void compiledVisit(CompiledVisitor visitor) {
+    }
 
 }

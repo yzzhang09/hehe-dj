@@ -149,4 +149,18 @@ public class ProxyTemplate implements Template {
 		return template.getChildren();
 	}
 
+    /** 
+     * @see httl.Node#interpretedVisit(httl.spi.translators.templates.InterpretedVisitor)
+     */
+    @Override
+    public void interpretedVisit(InterpretedVisitor visitor) {
+    }
+
+    /** 
+     * @see httl.Node#compiledVisit(httl.spi.translators.templates.CompiledVisitor)
+     */
+    @Override
+    public void compiledVisit(CompiledVisitor visitor) {
+    }
+
 }

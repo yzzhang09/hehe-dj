@@ -18,6 +18,8 @@ package httl.ast;
 import httl.Node;
 import httl.Template;
 import httl.Visitor;
+import httl.spi.translators.templates.CompiledVisitor;
+import httl.spi.translators.templates.InterpretedVisitor;
 import httl.util.ClassUtils;
 
 import java.io.IOException;
@@ -35,6 +37,12 @@ public abstract class AstVisitor implements Visitor {
 
 	public boolean visit(Node node) throws IOException, ParseException {
 		try {
+            if (this.getClass().isAssignableFrom(InterpretedVisitor.class)) {
+                node.interpretedVisit((InterpretedVisitor) this);
+            } else if (this.getClass().isAssignableFrom(CompiledVisitor.class)) {
+                node.compiledVisit((CompiledVisitor) this);
+            }
+
 			if (node instanceof Expression) {
 				visit((Expression) node);
 			} else if (node instanceof Statement) {

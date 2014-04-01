@@ -15,6 +15,9 @@
  */
 package httl;
 
+import httl.spi.translators.templates.CompiledVisitor;
+import httl.spi.translators.templates.InterpretedVisitor;
+
 import java.io.IOException;
 import java.text.ParseException;
 
@@ -49,5 +52,9 @@ public interface Node {
 	 * @return parent
 	 */
 	Node getParent();
+
+    void interpretedVisit(InterpretedVisitor visitor);
+
+    void compiledVisit(CompiledVisitor visitor);
 
 }
