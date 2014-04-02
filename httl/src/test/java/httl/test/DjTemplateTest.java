@@ -69,7 +69,11 @@ public class DjTemplateTest {
 		Set<String> values = new HashSet<String>();
 		if (StringUtils.isNotEmpty(value) && ! value.startsWith("$")) {
 			values.addAll(Arrays.asList(value.split("\\,")));
-		}
+        }
+        if (key.endsWith("excludes")) {
+            values.add("dj_base.httl");
+            values.add("dj_index.httl");
+        }
 		return Collections.unmodifiableSet(values);
 	}
 	
@@ -159,7 +163,7 @@ public class DjTemplateTest {
 			Codec[] codecs = engine.getProperty("codecs", Codec[].class);
 			String json = codecs[0].toString("context", model);
 
-			Object[] maps = new Object[] {context, model, json, null};
+            Object[] maps = new Object[] { context /*, model, json, null*/};
 			for (Object map : maps) {
 				if ("httl-velocity.properties".equals(config) 
 						&& (map == null || map instanceof String)) continue;

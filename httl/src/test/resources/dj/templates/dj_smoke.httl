@@ -1,5 +1,9 @@
-<table>
+{% extends "/templates/dj_index.httl" %}
+anbc
+{% block content %}
 
+{{ block.super }}
+<table>
 
 {% if(not books) %}
 NOBOOK
@@ -12,4 +16,5 @@ book:{{ book.title }}
 
 {% endif %}
 </table>
+{% endblock %}
  

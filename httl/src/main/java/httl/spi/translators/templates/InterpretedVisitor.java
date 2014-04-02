@@ -189,6 +189,10 @@ public class InterpretedVisitor extends AstVisitor {
 		this.template = template;
 	}
 
+    public Object getOut() {
+        return out;
+    }
+
 	public void setOut(Object out) {
 		this.out = out;
 	}

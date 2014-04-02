@@ -1,0 +1,9 @@
+<html>
+
+<body>
+{% block content %}
+
+base content
+{% endblock %}
+</body>
+</html>

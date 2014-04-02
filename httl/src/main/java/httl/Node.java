@@ -53,8 +53,8 @@ public interface Node {
 	 */
 	Node getParent();
 
-    void interpretedVisit(InterpretedVisitor visitor);
+    void interpretedVisit(InterpretedVisitor visitor) throws IOException, ParseException;
 
-    void compiledVisit(CompiledVisitor visitor);
+    void compiledVisit(CompiledVisitor visitor) throws IOException, ParseException;
 
 }

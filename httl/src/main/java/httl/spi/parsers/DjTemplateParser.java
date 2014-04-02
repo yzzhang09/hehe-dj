@@ -15,6 +15,15 @@
  */
 package httl.spi.parsers;
 
+import static httl.ast.custom.DirectiveConstant.blockExDirective;
+import static httl.ast.custom.DirectiveConstant.breakDirective;
+import static httl.ast.custom.DirectiveConstant.elseDirective;
+import static httl.ast.custom.DirectiveConstant.endDirective;
+import static httl.ast.custom.DirectiveConstant.extendsDirective;
+import static httl.ast.custom.DirectiveConstant.forDirective;
+import static httl.ast.custom.DirectiveConstant.ifDirective;
+import static httl.ast.custom.DirectiveConstant.macroDirective;
+import static httl.ast.custom.DirectiveConstant.setDirective;
 import httl.Engine;
 import httl.Node;
 import httl.Template;
@@ -33,6 +42,9 @@ import httl.ast.SetDirective;
 import httl.ast.Statement;
 import httl.ast.Text;
 import httl.ast.ValueDirective;
+import httl.ast.custom.BlockExDirective;
+import httl.ast.custom.ExtendsDirective;
+import httl.ast.custom.SuperDirective;
 import httl.spi.Parser;
 import httl.util.ClassUtils;
 import httl.util.DjScanner;
@@ -61,22 +73,6 @@ import java.util.regex.Pattern;
 public class DjTemplateParser implements Parser {
 
     private static DjScanner scanner = new DjScanner();
-
-    private boolean isDirective(String message) {
-        if (message.length() > 1 && message.charAt(0) == '#' && message.charAt(1) >= 'a' && message.charAt(1) <= 'z') {
-            int i = message.indexOf('(');
-            String name = (i > 0 ? message.substring(1, i) : message.substring(1));
-            return isDirectiveName(name);
-        }
-        return false;
-    }
-
-    private boolean isDirectiveName(String name) {
-        return StringUtils.inArray(name, setDirective) || StringUtils.inArray(name, ifDirective)
-               || StringUtils.inArray(name, elseDirective) || StringUtils.inArray(name, forDirective)
-               || StringUtils.inArray(name, breakDirective) || StringUtils.inArray(name, macroDirective)
-               || StringUtils.inArray(name, endDirective);
-    }
 
     private void defineVariableTypes(String value, int offset, List<Statement> directives) throws IOException,
                                                                                           ParseException {
@@ -142,7 +138,11 @@ public class DjTemplateParser implements Parser {
             if (token.getType() == DjScanner.Type.BLOCK.getValue()) {
                 doDirective(directives, seq, token, message, offset);
             } else if (token.getType() == DjScanner.Type.LINE.getValue()) {
-                directives.add(new ValueDirective((Expression) expressionParser.parse(message, 0), true, offset));
+                if (message.trim().equals("block.super")) {
+                    directives.add(new SuperDirective(offset));
+                } else {
+                    directives.add(new ValueDirective((Expression) expressionParser.parse(message, 0), true, offset));
+                }
             } else if (message.startsWith("##")) {
                 directives.add(new Comment(message.substring(2), false, offset));
             } else if ((message.startsWith("#*") && message.endsWith("*#"))) {
@@ -334,6 +334,10 @@ public class DjTemplateParser implements Parser {
             }
         } else if (StringUtils.inArray(name, endDirective)) {
             directives.add(new EndDirective(offset));
+        } else if (StringUtils.inArray(name, extendsDirective)) {
+            directives.add(new ExtendsDirective(value, offset));
+        } else if (StringUtils.inArray(name, blockExDirective)) {
+            directives.add(new BlockExDirective(value, offset));
         }
     }
 
@@ -402,20 +406,6 @@ public class DjTemplateParser implements Parser {
 
     private static final Pattern        ESCAPE_PATTERN           = Pattern.compile("\\\\+[#$]");
 
-    private String[]                    setDirective             = new String[] { "var" };
-
-    private String[]                    ifDirective              = new String[] { "if" };
-
-    private String[]                    elseDirective            = new String[] { "else" };
-
-    private String[]                    forDirective             = new String[] { "for" };
-
-    private String[]                    breakDirective           = new String[] { "break" };
-
-    private String[]                    macroDirective           = new String[] { "macro" };
-
-    private String[]                    endDirective             = new String[] { "end" };
-
     private Engine                      engine;
 
     private Parser                      expressionParser;
@@ -441,55 +431,6 @@ public class DjTemplateParser implements Parser {
      */
     public void setRemoveDirectiveBlankLine(boolean removeDirectiveBlankLine) {
         this.removeDirectiveBlankLine = removeDirectiveBlankLine;
-    }
-
-    /**
-     * httl.properties: set.directive=set
-     */
-    public void setSetDirective(String[] setDirective) {
-        this.setDirective = setDirective;
-    }
-
-    /**
-     * httl.properties: if.directive=if
-     */
-    public void setIfDirective(String[] ifDirective) {
-        this.ifDirective = ifDirective;
-    }
-
-    /**
-     * httl.properties: else.directive=else
-     */
-    public void setElseDirective(String[] elseDirective) {
-        this.elseDirective = elseDirective;
-    }
-
-    /**
-     * httl.properties: for.directive=for
-     */
-    public void setForDirective(String[] forDirective) {
-        this.forDirective = forDirective;
-    }
-
-    /**
-     * httl.properties: break.directive=break
-     */
-    public void setBreakDirective(String[] breakDirective) {
-        this.breakDirective = breakDirective;
-    }
-
-    /**
-     * httl.properties: macro.directive=macro
-     */
-    public void setMacroDirective(String[] macroDirective) {
-        this.macroDirective = macroDirective;
-    }
-
-    /**
-     * httl.properties: end.directive=end
-     */
-    public void setEndDirective(String[] endDirective) {
-        this.endDirective = endDirective;
     }
 
     /**

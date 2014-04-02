@@ -57,17 +57,17 @@ public abstract class Statement implements Node {
 	}
 
     /** 
-     * @see httl.Node#interpretedVisit(httl.spi.translators.templates.InterpretedVisitor)
-     */
+    * @see httl.Node#interpretedVisit(httl.spi.translators.templates.InterpretedVisitor)
+    */
     @Override
-    public void interpretedVisit(InterpretedVisitor visitor) {
+    public void interpretedVisit(InterpretedVisitor visitor) throws IOException, ParseException {
     }
 
     /** 
      * @see httl.Node#compiledVisit(httl.spi.translators.templates.CompiledVisitor)
      */
     @Override
-    public void compiledVisit(CompiledVisitor visitor) {
+    public void compiledVisit(CompiledVisitor visitor) throws IOException, ParseException {
     }
 
 }

@@ -1,0 +1,9 @@
+{% extends "/templates/dj_base.httl" %}
+
+{% block content %}
+
+
+index content
+
+
+{% endblock %}

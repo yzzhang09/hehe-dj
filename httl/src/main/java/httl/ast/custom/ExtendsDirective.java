@@ -4,46 +4,55 @@
  */
 package httl.ast.custom;
 
-import httl.ast.BlockDirective;
-import httl.spi.translators.templates.CompiledVisitor;
+import httl.Context;
+import httl.Visitor;
+import httl.ast.LineDirective;
 import httl.spi.translators.templates.InterpretedVisitor;
+import httl.util.StringUtils;
+
+import java.io.IOException;
+import java.text.ParseException;
 
 /**
  * 
  * @author zhangyi
- * @version $Id: ExtendsDirective.java, v 0.1 2014年4月1日 下午6:27:57 zhangyi Exp $
  */
-public class ExtendsDirective extends BlockDirective {
+public class ExtendsDirective extends LineDirective {
 
     private final String parentName;
 
     public ExtendsDirective(String parentName, int offset) {
         super(offset);
-        this.parentName = parentName;
+        if (StringUtils.isNotBlank(parentName)) {
+            this.parentName = parentName.replaceAll("\"", "");
+        } else {
+            this.parentName = null;
+        }
+
     }
 
-    /**
-     * Getter method for property <tt>parentName</tt>.
-     * 
-     * @return property value of parentName
-     */
     public String getParentName() {
         return parentName;
+    }
+    
+    /** 
+     * @see httl.ast.Directive#accept(httl.Visitor)
+     */
+    public void accept(Visitor visitor) throws IOException, ParseException {
+        visitor.visit(this);
+        //可以删除parent中的Text对象
+        if (StringUtils.isNotBlank(parentName)) {
+            Context.getContext().put(DirectiveEnum.EXTENDS.getCode(), parentName);
+        }
     }
 
     /** 
      * @see httl.ast.Statement#interpretedVisit(httl.spi.translators.templates.InterpretedVisitor)
      */
     @Override
-    public void interpretedVisit(InterpretedVisitor visitor) {
+    public void interpretedVisit(InterpretedVisitor visitor) throws IOException, ParseException {
         super.interpretedVisit(visitor);
+
     }
 
-    /** 
-     * @see httl.ast.Statement#compiledVisit(httl.spi.translators.templates.CompiledVisitor)
-     */
-    @Override
-    public void compiledVisit(CompiledVisitor visitor) {
-        super.compiledVisit(visitor);
-    }
 }
